@@ -12,7 +12,7 @@ This website serves as a solution where the teacher can:
 ### Tech Stack
   * Backend:
     * Core App Logic:
-      * [ExpressJS]
+      * [ExpressJS](https://expressjs.com/)
     * Database:
       * [PostgreSQL](https://www.postgresql.org/)
   * Frontend:
