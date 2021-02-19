@@ -3,6 +3,24 @@ const { User } = require('../models');
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+    if (!req.session.userId) {
+        res.redirect('/login/')
+    }
+    else {
+        User.getById(req.session.userId).then(
+            (matchingUsers) => {
+                if (!matchingUsers[0].is_admin) {
+                    res.redirect('/login/')
+                }
+                else {
+                    res.redirect('/dashboard/')
+                }
+            }
+        )
+    }
+})
+
 router.get('/view/', (req, res) => {
     User.getAll().then(
         (allUsers) => {
