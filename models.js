@@ -1,5 +1,10 @@
 const db = require('./db');
 
+// Required for file-hashing/file-saving functionality. 
+const sha1 = require('js-sha1');
+const { v4: uuidCreator } = require('uuid');
+const fs = require('fs');
+const path = require('path')
 // I did NOT implement password hashing, so it'll be more straightforward for you at first.  We'll implement hashing later.
 
 
@@ -59,6 +64,50 @@ class User {
 }
 
 
+class File {
+    constructor() {
+        this.hasher = sha1.create();
+        this.uploadDir = '/uploads';
+    }
+
+    getAll() {
+        const query = `SELECT * FROM files`;
+
+        return this._extractRows(db.query(query));
+    }
+
+    create(fileObj) {
+        const hash = this._createHash(fileObj.data.slice(0, 1000));
+        // new UUID4
+        const uuid = uuidCreator();
+        const originalName = fileObj.name;
+        const ext = fileObj.name.split('.').pop();
+
+        const query = `INSERT INTO files (uuid, original_name, hash, extension) VALUES ($1, $2, $3, $4);`;
+
+        const writePath = path.join(__dirname + this.uploadDir, uuid + '.' + ext);
+        this._writeFile(writePath, fileObj.data);
+        return this._extractRows(db.query(query, [uuid, originalName, hash, ext]));
+    }
+
+    _writeFile(filePath, data) {
+        fs.writeFile(filePath, data, () => {});
+    }
+    _createHash(byteString) {
+        this.hasher.update(byteString);
+
+        return this.hasher.hex();
+    }
+
+    _extractRows(queryPromise) {
+        // Helper function to extract the rows only out of the resolved Promise of a pg-query.
+        return queryPromise.then(data => data.rows);
+    }
+}
+
+
+
 module.exports = {
-    'User' : new User()
+    'User' : new User(),
+    'File' : new File()
 }

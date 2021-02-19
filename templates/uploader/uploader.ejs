@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset='utf-8'>
+        <title>Manage files</title>
+    </head>
+    <body>
+        <form action='/dashboard/uploader/upload' enctype="multipart/form-data" method='POST'>
+            <label for="file">File:</label><input type='file' name='file'>
+            <button type='submit'>Upload</button>
+        </form>
+        <hr>
+        
+        <% for (const file of allFiles) { %>
+            <%= file.original_name %>
+        <% } %>
+
+    </body>
+</html>

@@ -2,9 +2,11 @@ const express = require('express');
 const { User } = require('../models');
 
 const router = express.Router();
+const fileUploadRouter = require('./fileUploaderRouter')
 
 // In memory "state."  A "session" here is a listening-music-session (business logic).
 let isSessionInProgress = false;
+
 
 // Since our dashboard will have only authorized auths, I've just decided to extract this out to a middleware, as to not clutter up our routes.  Middleware is just a fancy term for code that runs on every request prior to routing (https://expressjs.com/en/guide/using-middleware.html).
 router.use(async (req, res, next) => {
@@ -26,6 +28,9 @@ router.use(async (req, res, next) => {
         )
     }
 })
+
+//Child-router for our file-upload routes.
+router.use('/uploader', fileUploadRouter);
 
 router.get('/', (req, res) => {
     res.render('admin/dashboard', {

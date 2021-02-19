@@ -15,12 +15,17 @@ app.use(session({
 // Body-parsing middleware so we can extract the application/x-www-form-urlencoded data from the body of POST requests.  I have no intention of having nested query-strings, so a flat query string can use extended:false as an option.
 app.use(express.urlencoded({ extended: false }));
 
+//static files and our uploads dir (also served similarly).
+app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use('/static', express.static(__dirname + '/static'));
+
 // Routers.
 const usersRouter = require('./routers/usersRouter');
 const adminRouter = require('./routers/adminRouter');
+const dashboardRouter = require('./routers/fileUploaderRouter');
 
 app.use('/', usersRouter);
 app.use('/dashboard', adminRouter);
-
+app.use('/dashboard', dashboardRouter);
 
 app.listen(3000, () => console.log("Listening on 3000."));
