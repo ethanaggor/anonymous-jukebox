@@ -11,7 +11,7 @@ const db = new Client(DB_URI);
 db.connect();
 
 //Really simple clear toggle.
-const CLEAR_DB = true;
+const CLEAR_DB = false;
 
 const createDB = () => {
     const dropAllTables = async () => {
